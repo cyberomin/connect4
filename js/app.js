@@ -53,13 +53,33 @@
 
 
 	/**
-	*createBall creates circular canvases to represent balls.
+	*createBall creates circular shapes to represent balls.
 	*@createBall create's a new ball
-	*@param color canvas/ball color
+	*@param color color of the ball
+	*@param row - row upon which ball should be created
+	*@colum - column upon which ball the ball should be created.
 	*/
-	Connect.prototype.createBall = function(ballColor) {	
-		var ball = "<div class='"+ballColor+"'></div>";
-		return ball;
+	createBall = function(row, column, color) {
+		var ball = "<div class='"+color+"'></div>";
+		$('[data-row="'+(row-1)+'"][data-column="'+column+'"]').children('div').remove();
+	    $('[data-row="'+row+'"][data-column="'+column+'"]').append(ball);
+	}
+
+
+	/**
+	*animateBall creates the animation effect for balls
+	*@animateBall create's animation
+	*@param color color of the ball
+	*@param data - an object holding colum and row for the current location
+	*/
+	Connect.prototype.animateBall = function(data, color) {
+	    var row = 0;
+	    stopVal = setInterval(function() {
+	        if(row == data.row)
+	            clearInterval(stopVal);
+	       	createBall(row, data.column, color);
+	        row++;
+	    }, 50);
 	};
 
 
@@ -286,11 +306,9 @@
 		
 		var player 		= 1;
 		var resetBtn 	= $("#reset-game");
-		var red 		= this.red; 
-		var black		= this.black;
 		var self 		= this;
 
-		var pointerBall = self.createBall("redBall");
+		
 		
 
 		this.ballLocation.click(function(){
@@ -304,21 +322,17 @@
 				row: $(this).data('row'),
         		column: $(this).data('column')
 			}
-			var ball;
-
-			
 
 			if ( current_location > 35 || $(this).hasClass('open') && $(this).attr('class') != "closed") {
 				$(this).attr('class', 'closed');
 				location_above.attr('class', 'open');
 				
 				if (player === 1) {
-					ball 	= self.createBall(self.redBall);
 
-					if ($(this).children("div").attr('class') !== "redBall" && 
-						$(this).children("div").attr('class') !== "blackBall"){
-
-						$(this).append($(ball).fadeIn()); //Only append one ball per cell
+					if ($(this).children("div").attr('class') !== self.redBall && 
+						$(this).children("div").attr('class') !== self.blackBall){
+						
+						self.animateBall(clicked_location, self.redBall);
 						$(".turns").removeClass("redPlayer").addClass("blackPlayer")
 						player 	= 2; 								//Swap turns
 					}
@@ -328,13 +342,12 @@
 					self.win(clicked_location, "Red");		//Check if there's a winner
 					
 				} else {
-					ball 	= self.createBall(self.blackBall);
 					
+					
+					if ($(this).children("div").attr('class') !== self.redBall && 
+						$(this).children("div").attr('class') !== self.blackBall){
 
-					if ($(this).children("div").attr('class') !== "redBall" && 
-						$(this).children("div").attr('class') !== "blackBall"){
-
-						$(this).append($(ball).fadeIn()); //Only append one ball per cell
+						self.animateBall(clicked_location, self.blackBall);
 						$(".turns").removeClass("blackPlayer").addClass("redPlayer")
 						player 	= 1; 								//Swap tunrs
 					}
