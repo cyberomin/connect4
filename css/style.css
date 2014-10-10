@@ -1,0 +1,136 @@
+@font-face {
+    font-family: 'Proxima Nova';
+    src: url('../fonts/proximanova-light-webfont.eot');
+    src: url('../fonts/proximanova-light-webfont.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/proximanova-light-webfont.woff') format('woff'),
+        url('../fonts/proximanova-light-webfont.ttf') format('truetype'),
+        url('../fonts/proximanova-light-webfont.svg#ProximaNovaLight') format('svg');
+    font-weight: 300;
+    font-style: normal;
+}
+
+body, h1, h2, h3, h4, h5, h6,a { 
+
+    font-family: "Proxima Nova", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    
+    background-color: #F1F1F1;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    height: 80px;
+    line-height: 80px;
+    background-color: #25313E;
+    width: 100%;
+    color: #FFFFFF;
+}
+
+header h2 {
+    display: inline-block;
+    padding-left: 20px;
+    font-size: 30px;
+}
+
+.container {
+    width: 630px;
+    height: 350px;
+    margin: 40px auto;
+}
+
+/*Board*/
+#board table {
+    border-spacing: 5px;
+    border-collapse: separate;
+}
+
+#board table td {
+    border: solid 2px #A0C2D3;
+    padding: 0;
+    margin: 0;
+}
+
+/*Assets*/
+.btn,.turns {
+    display: inline-block;
+    margin-bottom: 0px;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857;
+    border-radius: 4px;
+    -moz-user-select: none;
+    margin: 5px 5px 0 0;
+}
+
+.turns {
+    float: right;
+}
+.redPlayer {
+    width: 100px;
+    height: 20px;
+    color: #FFF;
+    background-color: #D9534F;
+    border-color: #D43F3A;
+    cursor: default;
+}
+
+.blackPlayer {
+    width: 100px;
+    color: #FFF;
+    background-color: #000000;
+    border-color: #000000;
+    cursor: default;
+    height: 20px;
+}
+.btn-new{
+    color: #FFF;
+    background-color: #5CB85C;
+    border-color: #4CAE4C;
+}
+
+/*Alert*/
+.alert-success {
+    color: #3C763D;
+    background-color: #DFF0D8;
+    border-color: #D6E9C6;
+}
+.alert {
+    padding: 15px;
+    border: 1px solid #5CB85C;
+    border-radius: 4px;
+    width: 600px;
+    display: none;
+    position: absolute;
+    margin-top:230px;
+    text-align: center;
+}
+
+
+thead tr td {
+    height: 60px;
+    border: none !important;
+}
+
+.redBall,.blackBall {
+    width:60px;
+    height: 60px;
+    border-radius: 60px;
+    background-color:#FF0000;
+    margin: 0 auto;
+}
+.blackBall {
+    background-color:#000000;
+}
