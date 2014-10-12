@@ -60,7 +60,7 @@ Connect.prototype.buildTable = function() {
 *@param row - row upon which ball should be created
 *@colum - column upon which ball the ball should be created.
 */
-createBall = function(row, column, color) {
+Connect.prototype.createBall = function(row, column, color) {
     var ball = "<div class='"+color+"'></div>";
     $('[data-row="'+(row-1)+'"][data-column="'+column+'"]').children('div').remove();
     $('[data-row="'+row+'"][data-column="'+column+'"]').append(ball);
@@ -74,11 +74,12 @@ createBall = function(row, column, color) {
 *@param data - an object holding colum and row for the current location
 */
 Connect.prototype.animateBall = function(data, color) {
-    var row = 0;
+    var row     = 0;
+    var self    = this;
     stopVal = setInterval(function() {
         if(row == data.row)
             clearInterval(stopVal);
-        createBall(row, data.column, color);
+        self.createBall(row, data.column, color);
         row++;
     }, 50);
 };
@@ -356,7 +357,6 @@ Connect.prototype.init = function() {
     });
 
     resetBtn.click(function() {
-        //self.ballLocation = $("table td");
         self.resetGame(self.ballLocation);
         player = 1;
     });

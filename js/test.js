@@ -13,3 +13,13 @@ QUnit.test( "build table is a function", function( assert ) {
 QUnit.test( "msgBoxAlert is a function", function( assert ) {
 	assert.ok(typeof play.msgBoxAlert === "function" ,"msgBoxAlert is a function" );
 });
+
+
+QUnit.test( "animate ball", function( assert ) {
+	var data = {
+		row : 5,
+		column : 0 
+	};
+	var color  = "redBall";
+	assert.ok(typeof play.animateBall === "function" ,"ball is animating" );
+});
