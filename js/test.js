@@ -14,6 +14,10 @@ QUnit.test( "msgBoxAlert is a function", function( assert ) {
 	assert.ok(typeof play.msgBoxAlert === "function" ,"msgBoxAlert is a function" );
 });
 
+QUnit.test( "msgBoxAlert created", function( assert ) {
+	var player = "Roby";
+	assert.ok(play.msgBoxAlert(player) === true ,"msgBoxAlert created" );
+});
 
 QUnit.test( "animate ball", function( assert ) {
 	var data = {
@@ -21,5 +25,30 @@ QUnit.test( "animate ball", function( assert ) {
 		column : 0 
 	};
 	var color  = "redBall";
-	assert.ok(typeof play.animateBall === "function" ,"ball is animating" );
+	assert.ok(play.animateBall(data, color) === true ,"ball is animating" );
+});
+
+QUnit.test( "create ball", function( assert ) {
+	var row = 5;
+	var column = 6;
+	var color  = "redBall";
+	assert.ok(play.createBall(row, color, color) === true ,"ball created" );
+});
+
+QUnit.test( "disable board", function( assert ) {
+	assert.ok(play.disableBoard() === true ,"Board disabled." );
+});
+
+QUnit.test( "reset game", function( assert ) {
+	var board = play.ballLocation;
+	assert.ok(play.resetGame(board) === true ,"Game reset successufull" );
+});
+
+QUnit.test( "win game", function( assert ) {
+	var data = {
+		row : 5,
+		column : 0 
+	};
+	var player = "Red";
+	assert.ok(play.win(data, player) === true ,"Win game" );
 });

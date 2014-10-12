@@ -64,6 +64,7 @@ Connect.prototype.createBall = function(row, column, color) {
     var ball = "<div class='"+color+"'></div>";
     $('[data-row="'+(row-1)+'"][data-column="'+column+'"]').children('div').remove();
     $('[data-row="'+row+'"][data-column="'+column+'"]').append(ball);
+    return true;
 }
 
 
@@ -82,6 +83,7 @@ Connect.prototype.animateBall = function(data, color) {
         self.createBall(row, data.column, color);
         row++;
     }, 50);
+    return true;
 };
 
 
@@ -90,8 +92,13 @@ Connect.prototype.animateBall = function(data, color) {
 *@param player - name of the winning player
 */
 Connect.prototype.msgBoxAlert = function(player) {
-    this.msgBox.html("<strong>Game over!!!  "+player+" Player Wins</stong>").fadeIn();
-    this.newGameBtn.text("New Game");
+    if (player !== undefined) {
+        this.msgBox.html("<strong>Game over!!!  "+player+" Player Wins</stong>").fadeIn();
+        this.newGameBtn.text("New Game");
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
@@ -105,13 +112,18 @@ Connect.prototype.msgBoxAlert = function(player) {
 *@return boolean false. This prevents default propagation of the clicked button
 */
 Connect.prototype.resetGame = function(board) {
-    for (var i = 0; i < board.length; i++) {
-        $(board[i]).empty();
+    if (board !== undefined) {
+        for (var i = 0; i < board.length; i++) {
+            $(board[i]).removeAttr('class').empty();
+        }
+        this.msgBox.empty().hide();         //Clear message.
+        $(".turns").removeClass("blackPlayer").removeClass("redPlayer").addClass("redPlayer");
+        this.newGameBtn.text("Reset Game");
+        game.board = [ [ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ] ];
+        return true;
+    } else {
+        return false;
     }
-    this.msgBox.empty().hide();         //Clear message.
-    $(".turns").removeClass("blackPlayer").removeClass("redPlayer").addClass("redPlayer");
-    this.newGameBtn.text("Reset Game");
-    game.board = [ [ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ] ];
 }
 
 
@@ -123,6 +135,7 @@ Connect.prototype.disableBoard = function() {
     for (var i = 0; i < board.length; i++) {
         $(board[i]).attr('class','closed'); 
     }
+    return true;
 }
 
 
@@ -292,6 +305,8 @@ Connect.prototype.win = function(position, player) {
         this.disableBoard();
     }
 
+    return true;
+
 }
 
 
@@ -318,7 +333,7 @@ Connect.prototype.init = function() {
             column: $(this).data('column')
         }
 
-        if ( current_location > 35 || $(this).hasClass('open') && $(this).attr('class') != "closed") {
+        if ( $(this).attr('class') !== "closed" && current_location > 35 || $(this).hasClass('open') ) {
             $(this).attr('class', 'closed');
             location_above.attr('class', 'open');
             
