@@ -33,7 +33,8 @@ var Connect = function () {
 
 /**
 *builtTable creates the game board
-*@method buildTable
+*@method buildTable - builds the table for the game.
+*@return table_builder
 */
 Connect.prototype.buildTable = function() {
     var table_builder = "<table><tbody>";
@@ -55,41 +56,52 @@ Connect.prototype.buildTable = function() {
 
 /**
 *createBall creates circular shapes to represent balls.
-*@createBall create's a new ball
-*@param color color of the ball
+*@method createBall - create's a new ball
+*@param color - color of the ball
 *@param row - row upon which ball should be created
-*@colum - column upon which ball the ball should be created.
+*@param column - column upon which the ball should be created.
+*@return boolean
 */
 Connect.prototype.createBall = function(row, column, color) {
-    var ball = "<div class='"+color+"'></div>";
-    $('[data-row="'+(row-1)+'"][data-column="'+column+'"]').children('div').remove();
-    $('[data-row="'+row+'"][data-column="'+column+'"]').append(ball);
-    return true;
+    if (row !== undefined && column !== undefined && color !== undefined){
+        var ball = "<div class='"+color+"'></div>";
+        $('[data-row="'+(row-1)+'"][data-column="'+column+'"]').children('div').remove();
+        $('[data-row="'+row+'"][data-column="'+column+'"]').append(ball);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
 /**
 *animateBall creates the animation effect for balls
-*@animateBall create's animation
+*@method animateBall create's animation
 *@param color color of the ball
-*@param data - an object holding colum and row for the current location
+*@param data - an object holding column and row for the current clicked location
+*@return boolean
 */
 Connect.prototype.animateBall = function(data, color) {
-    var row     = 0;
-    var self    = this;
-    stopVal = setInterval(function() {
-        if(row == data.row)
-            clearInterval(stopVal);
-        self.createBall(row, data.column, color);
-        row++;
-    }, 50);
-    return true;
+    if (data !== undefined && color !== undefined){
+        var row     = 0;
+        var self    = this;
+        stopVal = setInterval(function() {
+            if(row == data.row)
+                clearInterval(stopVal);
+            self.createBall(row, data.column, color);
+            row++;
+        }, 50);
+        return true;
+    } else {
+        return false;
+    }
 };
 
 
 /**
 *@method msgBoxAlert alert to check who wins.
 *@param player - name of the winning player
+*@return boolean
 */
 Connect.prototype.msgBoxAlert = function(player) {
     if (player !== undefined) {
@@ -109,27 +121,34 @@ Connect.prototype.msgBoxAlert = function(player) {
 *@method resetGame
 *@param board, board upon which balls are places
 *@param msgBox, Alert box for game
-*@return boolean false. This prevents default propagation of the clicked button
+*@return boolean
 */
 Connect.prototype.resetGame = function(board) {
-    for (var i = 0; i < board.length; i++) {
-        $(board[i]).removeAttr('class').empty();
+    if (board !== undefined) {
+        for (var i = 0; i < board.length; i++) {
+            $(board[i]).removeAttr('class').empty();
+        }
+        this.msgBox.empty().hide();         //Clear message.
+        $(".turns").removeClass("blackPlayer").removeClass("redPlayer").addClass("redPlayer");
+        this.newGameBtn.text("Reset Game");
+        game.board = [ [ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ] ];
+        return true;
+    } else {
+        return false;
     }
-    this.msgBox.empty().hide();         //Clear message.
-    $(".turns").removeClass("blackPlayer").removeClass("redPlayer").addClass("redPlayer");
-    this.newGameBtn.text("Reset Game");
-    game.board = [ [ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ],[ 0, 0, 0, 0, 0, 0, 0 ] ];
 }
 
 
 /**
 *@method disableBoard - make cells unclickable after a win.
+*@return boolean
 */
 Connect.prototype.disableBoard = function() {
     var board = this.ballLocation;
     for (var i = 0; i < board.length; i++) {
         $(board[i]).attr('class','closed'); 
     }
+    return true;
 }
 
 
@@ -144,161 +163,181 @@ Connect.prototype.disableBoard = function() {
 
 //Vertical Win
 Connect.prototype.verticalCheck = function(position) {
-    var row     = position.row;
-    var column  = position.column;
-    var player  = game.board[row][column];
+    if (position !== undefined) {
+        var row     = position.row;
+        var column  = position.column;
+        var player  = game.board[row][column];
 
-    if (row >= game.rows - 3){
-        return false;
-    }
-     
-    for (var i = row+1; i <= row + 3; i++){
-        if (game.board[i][column] != player){
+        if (row >= game.rows - 3){
             return false;
         }
-    }
-    return true;
-}
-
-//Horizontal Win
-Connect.prototype.horizontalCheck = function(position) {
-    var row     = position.row;
-    var column  = position.column;
-    var player  = game.board[row][column];
-    
-    var counter = 1;
-             
-    for(var i = column-1; i>=0; i--){
-        if(game.board[row][i] != player){
-            break;
-        }
-        counter++;
-    }
-             
-    for(var j = column+1; j < game.columns; j++){
-        if(game.board[row][j] != player){
-            break;
-        }
-        counter++;
-    }
-             
-    if(counter >=4){
-        return true;
-    }
-    else{
-        return false;
-    }
-}
-
-//Left Diagonal Win
-Connect.prototype.leftDiagonalCheck = function(position) {
-    var player  = game.board[position.row][position.column];  
-    var row     = position.row - 1;
-    var column  = position.column - 1;
-    var counter = 1;
- 
-    while (row >= 0 && column >= 0)
-    {
-        if (game.board[row][column] == player)
-        {
-            counter++;
-            row--;
-            column--;
-        }
-        else
-        {
-            break;           
-        }
-    }
          
-    row = position.row + 1;
-    column = position.column + 1;
-         
-    while (row < game.rows && column < game.columns)
-    {           
-        if (game.board[row][column] == player)
-        {
-            counter++;
-            row++;
-            column++;
+        for (var i = row+1; i <= row + 3; i++){
+            if (game.board[i][column] != player){
+                return false;
+            }
         }
-        else
-        {
-            break;
-        }
-    }
-    if(counter >=4)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-//Right diagonal Win
-Connect.prototype.rightDiagonalCheck = function(position){
-    var player  = game.board[position.row][position.column];
-    var row     = position.row + 1;
-    var column  = position.column - 1;
-    var counter = 1;
-         
-    while (row < game.rows && column >= 0)
-    {
-        if (game.board[row][column] == player){
-            counter++;
-            row++;
-            column--;
-        } else {
-            break;           
-        }
-    }
-         
-    row = position.row - 1;
-    column = position.column + 1;
- 
-    while (row >= 0 && column < game.columns)
-    {           
-        if (game.board[row][column] == player)
-        {
-            counter++;
-            row--;
-            column++;
-        }
-        else
-        {
-            break;
-        }
-    }
-    if(counter >=4){
         return true;
     } else {
         return false;
     }
 }
 
+//Horizontal Win
+Connect.prototype.horizontalCheck = function(position) {
+    if (position !== undefined) {
+        var row     = position.row;
+        var column  = position.column;
+        var player  = game.board[row][column];
+        
+        var counter = 1;
+                 
+        for(var i = column-1; i>=0; i--){
+            if(game.board[row][i] != player){
+                break;
+            }
+            counter++;
+        }
+                 
+        for(var j = column+1; j < game.columns; j++){
+            if(game.board[row][j] != player){
+                break;
+            }
+            counter++;
+        }
+                 
+        if(counter >=4){
+            return true;
+        }
+        else{
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+//Left Diagonal Win
+Connect.prototype.leftDiagonalCheck = function(position) {
+    if (position !== undefined) {
+        var player  = game.board[position.row][position.column];  
+        var row     = position.row - 1;
+        var column  = position.column - 1;
+        var counter = 1;
+     
+        while (row >= 0 && column >= 0)
+        {
+            if (game.board[row][column] == player)
+            {
+                counter++;
+                row--;
+                column--;
+            }
+            else
+            {
+                break;           
+            }
+        }
+             
+        row = position.row + 1;
+        column = position.column + 1;
+             
+        while (row < game.rows && column < game.columns)
+        {           
+            if (game.board[row][column] == player)
+            {
+                counter++;
+                row++;
+                column++;
+            }
+            else
+            {
+                break;
+            }
+        }
+        if(counter >=4)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+//Right diagonal Win
+Connect.prototype.rightDiagonalCheck = function(position) {
+    if (position !== undefined) {
+        var player  = game.board[position.row][position.column];
+        var row     = position.row + 1;
+        var column  = position.column - 1;
+        var counter = 1;
+             
+        while (row < game.rows && column >= 0)
+        {
+            if (game.board[row][column] == player){
+                counter++;
+                row++;
+                column--;
+            } else {
+                break;           
+            }
+        }
+             
+        row = position.row - 1;
+        column = position.column + 1;
+     
+        while (row >= 0 && column < game.columns)
+        {           
+            if (game.board[row][column] == player)
+            {
+                counter++;
+                row--;
+                column++;
+            }
+            else
+            {
+                break;
+            }
+        }
+        if(counter >=4){
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
 Connect.prototype.win = function(position, player) {
-    if (this.verticalCheck(position)) {
-        this.msgBoxAlert(player);
-        this.disableBoard();
-    }
+    if (position !== undefined && player !== undefined) {
+        if (this.verticalCheck(position)) {
+            this.msgBoxAlert(player);
+            this.disableBoard();
+        }
 
-    if (this.horizontalCheck(position)) {
-        this.msgBoxAlert(player);
-        this.disableBoard();
-    }
+        if (this.horizontalCheck(position)) {
+            this.msgBoxAlert(player);
+            this.disableBoard();
+        }
 
-    if (this.leftDiagonalCheck(position)) {
-        this.msgBoxAlert(player);
-        this.disableBoard();
-    }
+        if (this.leftDiagonalCheck(position)) {
+            this.msgBoxAlert(player);
+            this.disableBoard();
+        }
 
-    if (this.rightDiagonalCheck(position)) {
-        this.msgBoxAlert(player);
-        this.disableBoard();
+        if (this.rightDiagonalCheck(position)) {
+            this.msgBoxAlert(player);
+            this.disableBoard();
+        }
+        return true;
+    } else {
+        return false;
     }
-
 }
 
 
