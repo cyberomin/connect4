@@ -27,3 +27,10 @@ After uncommenting the above tag. You will need to comment out
 </script>
 ```
 All of these will need to be done in the index.html page.
+
+Running the application
+=======================
+
+Running the application is simple, you can either run it from a localhost or just open the index.html file.
+To run from a localhost, clone the directory into your web root /var/www. Launch a browser and go to
+localhost/connect4
